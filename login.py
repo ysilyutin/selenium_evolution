@@ -1,33 +1,43 @@
+import unittest
 from selenium import webdriver
 
-# Create a new Firefox session
-driver = webdriver.Firefox()
-driver.implicitly_wait(30)
-driver.maximize_window()
 
-driver.get("https://testmunk.com/login")
+class SmokeTest(unittest.TestCase):
 
-# Get the email and password textboxes
-email_field = driver.find_element_by_name("email")
-email_field.clear()
+    def setUp(self):
+        # Create a new Firefox session
+        self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(30)
+        self.driver.maximize_window()
 
-password_field = driver.find_element_by_name("password")
-password_field.clear()
+        self.driver.get("https://testmunk.com/login")
 
-sign_in_button = driver.find_element_by_id("log-in")
+    def test_verify_amount_of_testruns(self):
+        # Get the email and password textboxes
+        self.email_field = self.driver.find_element_by_name("email")
+        self.email_field.clear()
 
-# Enter valid email\password and click Sign In button
-email_field.send_keys("*****@testmunk.com")
-password_field.send_keys("****")
-sign_in_button.click()
+        self.password_field = self.driver.find_element_by_name("password")
+        self.password_field.clear()
 
-# Find amount of testruns on the page
-testruns = driver.find_elements_by_class_name("run-name-input")
+        self.sign_in_button = self.driver.find_element_by_id("log-in")
 
-print("Found " + str(len(testruns)) + " testruns.")
+        # Enter valid email\password and click Sign In button
+        self.email_field.send_keys("*****@testmunk.com")
+        self.password_field.send_keys("****")
+        self.sign_in_button.click()
 
-for testrun in testruns:
-    print(testrun.text)
+        # Find amount of testruns on the page
+        testruns = self.driver.find_elements_by_class_name("run-name-input")
 
-# Close the browser window
-driver.quit()
+        print("Found " + str(len(testruns)) + " testruns.")
+
+        for testrun in testruns:
+            print(testrun.text)
+
+        if __name__ == '__main__':
+            unittest.main(verbosity=2)
+
+    def tearDown(self):
+        # Close the browser window
+        self.driver.quit()
