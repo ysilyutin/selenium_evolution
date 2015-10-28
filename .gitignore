@@ -1,2 +1,3 @@
 # Specific to PyCharm
 /.idea
+/__pycache__
