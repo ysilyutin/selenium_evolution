@@ -4,13 +4,14 @@ from selenium import webdriver
 
 class SmokeTest(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         # Create a new Firefox session
-        self.driver = webdriver.Firefox()
-        self.driver.implicitly_wait(30)
-        self.driver.maximize_window()
+        cls.driver = webdriver.Firefox()
+        cls.driver.implicitly_wait(30)
+        cls.driver.maximize_window()
 
-        self.driver.get("https://testmunk.com/login")
+        cls.driver.get("https://testmunk.com/login")
 
     def test_verify_amount_of_testruns(self):
         # Get the email and password textboxes
@@ -35,9 +36,10 @@ class SmokeTest(unittest.TestCase):
         for testrun in testruns:
             print(testrun.text)
 
-        if __name__ == '__main__':
-            unittest.main(verbosity=2)
-
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls):
         # Close the browser window
-        self.driver.quit()
+        cls.driver.quit()
+
+    if __name__ == '__main__':
+        unittest.main(verbosity=2)
