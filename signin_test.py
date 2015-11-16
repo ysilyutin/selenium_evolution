@@ -1,6 +1,7 @@
 import unittest
 from selenium import webdriver
-
+from random import choice
+from string import ascii_letters, digits
 
 class SignInTest(unittest.TestCase):
 
@@ -41,9 +42,13 @@ class SignInTest(unittest.TestCase):
 
         sign_in_button = self.driver.find_element_by_id("log-in")
 
+        # Create a random password string contains letter and digits
+        random_password = ''.join([choice(ascii_letters + digits) for i in range(32)])
+
         # Enter valid email\password and click Sign In button
         email_field.send_keys("*****@testmunk.com")
-        password_field.send_keys("*****")
+        password_field.send_keys(random_password)
+
         sign_in_button.click()
 
         alert = self.driver.find_element_by_class_name('alert-danger')

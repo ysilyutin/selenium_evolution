@@ -1,5 +1,6 @@
 import unittest
 from selenium import webdriver
+import selenium.webdriver.support.ui as ui
 
 
 class DashboardTest(unittest.TestCase):
@@ -14,6 +15,14 @@ class DashboardTest(unittest.TestCase):
         cls.driver.get("https://testmunk.com/login")
 
     def test_verify_amount_of_testruns(self):
+        last_testrun = self.driver.find_element_by_class_name("run-name-input").get_attribute("title")
+        last_testrun_number = int(last_testrun.split()[1])
+
+        # Find amount of testruns on the page
+        testruns = self.driver.find_elements_by_class_name("run-name-input")
+        self.assertEqual(len(testruns), last_testrun_number)
+
+    def test_new_testrun_button_opens_popup_window(self):
         # Get the email and password textboxes
         email_field = self.driver.find_element_by_name("email")
         email_field.clear()
@@ -28,9 +37,13 @@ class DashboardTest(unittest.TestCase):
         password_field.send_keys("****")
         sign_in_button.click()
 
-        # Find amount of testruns on the page
-        testruns = self.driver.find_elements_by_class_name("run-name-input")
-        self.assertEqual(len(testruns), 33)
+        # New Testrun button should open the new popup window
+        new_testrun_button = self.driver.find_element_by_id("new-testrun-widget")
+        testrun_popup_window = self.driver.find_element_by_id("testrun-application")
+
+        wait = ui.WebDriverWait(self, 10)
+        new_testrun_button.click()
+        wait.until(lambda driver: testrun_popup_window.is_displayed())
 
     @classmethod
     def tearDownClass(cls):
